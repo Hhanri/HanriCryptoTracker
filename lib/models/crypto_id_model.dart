@@ -8,9 +8,4 @@ class CryptoIdModel extends Equatable{
   @override
   // TODO: implement props
   List<Object?> get props => [id, name];
-
-  @override
-  CopyWith({required String price}) {
-    return CryptoIdModel(id: id, name: name, price: price);
-  }
 }

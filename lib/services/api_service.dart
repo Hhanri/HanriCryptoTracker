@@ -12,11 +12,9 @@ class APIService {
 
   static Future<List<String>> getPrices(List<String> ids) async {
     final String url = "$urlBody$apiKeyExtension$apiKey$idsExtension${ids.join(",")}$attributesExtensions";
-    print(url);
     List<String> prices = [];
     final Response response = await http.get(Uri.parse(url));
     final body = jsonDecode(response.body) as List<dynamic>;
-    print(body);
     for (var element in body) {
       prices.add(element["price"] ?? "error");
     }

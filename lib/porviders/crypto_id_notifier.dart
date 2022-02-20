@@ -18,7 +18,7 @@ class CryptoIdNotifier extends StateNotifier<List<CryptoIdModel>> {
     for (var element in state) {
       try {
         int index = state.indexOf(element);
-        newState.add(element.CopyWith(price: prices[index]));
+        newState.add(CryptoIdModel(id: element.id, name: element.name, price: prices[index]));
       } catch(e) {
         print("index error");
       }
