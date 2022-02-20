@@ -1,3 +1,5 @@
+import 'package:crypto_tracker/models/crypto_id_model.dart';
+import 'package:crypto_tracker/porviders/crypto_id_notifier.dart';
 import 'package:crypto_tracker/porviders/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -52,10 +54,11 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       body: Consumer(
         builder: (BuildContext context, WidgetRef ref, Widget? child) {
-          final int counter = ref.watch(timerProvider);
+          final bool counter = ref.watch(timerProvider.select((value) => value.timeLeft <10));
+          ref.watch(cryptoIdsProvider.notifier).setPrices();
           return Center(
             child: Text(
-              counter.toString()
+              ref.watch(cryptoIdsProvider).first.price
             ),
           );
         }

@@ -1,12 +1,16 @@
 import 'package:equatable/equatable.dart';
-
 class CryptoIdModel extends Equatable{
   final String id;
   final String name;
-
-  const CryptoIdModel({required this.id, required this.name});
+  final String price;
+  const CryptoIdModel({required this.id, required this.name, required this.price});
 
   @override
   // TODO: implement props
   List<Object?> get props => [id, name];
+
+  @override
+  CopyWith({required String price}) {
+    return CryptoIdModel(id: id, name: name, price: price);
+  }
 }
