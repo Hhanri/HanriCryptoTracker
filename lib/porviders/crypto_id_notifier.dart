@@ -12,18 +12,17 @@ class CryptoIdNotifier extends StateNotifier<List<CryptoIdModel>> {
   }
 
   void setPrices() async {
-    final List<String> ids = getIds();
-    final List<String> prices = await APIService.getPrices(ids);
-    List<CryptoIdModel> newState = [];
-    for (var element in state) {
-      try {
+    try {
+      final List<String> ids = getIds();
+      final List<String> prices = await APIService.getPrices(ids);
+      List<CryptoIdModel> newState = [];
+      for (var element in state) {
         int index = state.indexOf(element);
         newState.add(CryptoIdModel(id: element.id, name: element.name, price: prices[index]));
-      } catch(e) {
-        print("index error");
       }
+      state = newState;
+    } catch(e) {
+      print("error");
     }
-    state = newState;
   }
-
 }

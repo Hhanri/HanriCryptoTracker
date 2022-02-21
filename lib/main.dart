@@ -46,8 +46,8 @@ class MyHomePage extends StatelessWidget {
     return Scaffold(
       body: Consumer(
         builder: (BuildContext context, WidgetRef ref, Widget? child) {
-          bool counter = ref.watch(timerProvider.select((value) => value.changed));
           ref.watch(cryptoIdsProvider.notifier).setPrices();
+          bool counter = ref.watch(timerProvider.select((value) => value.changed));
           return Center(
             child: Text(
               ref.watch(cryptoIdsProvider).first.price

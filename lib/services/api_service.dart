@@ -18,7 +18,6 @@ class APIService {
     for (var element in body) {
       prices.add(element["price"] ?? "error");
     }
-
     return prices;
   }
 }
