@@ -30,7 +30,8 @@ class CryptoIdNotifier extends StateNotifier<List<CryptoIdModel>> {
 
   void setPrices() async {
     try {
-      final List<CryptoIdModel> cryptos = await APIService.getPrices(state);
+      final List<CryptoIdModel> cryptos = await APIService.getPrices(state.map((e) => e.id).toList());
+      print("state = $state");
       state = [...cryptos];
       save();
     } catch(e) {
@@ -51,6 +52,13 @@ class CryptoIdNotifier extends StateNotifier<List<CryptoIdModel>> {
     temporaryState.removeAt(oldIndex);
     temporaryState.insert(index, crypto);
     state = temporaryState;
+    save();
+  }
+  void manualLoadState(){
+    state = [
+      const CryptoIdModel(id: "BTC", name: "Bitcoin", price: 0, priceChange: 0),
+      const CryptoIdModel(id: "ETH", name: "Ethereum", price: 0, priceChange: 0)
+    ];
     save();
   }
 }

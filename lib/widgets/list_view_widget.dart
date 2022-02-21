@@ -5,8 +5,8 @@ import 'package:crypto_tracker/widgets/list_tile_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ListViewWidget extends StatelessWidget {
-  const ListViewWidget({Key? key}) : super(key: key);
+class HomeListViewWidget extends StatelessWidget {
+  const HomeListViewWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,6 @@ class ListViewWidget extends StatelessWidget {
       builder: (BuildContext context, WidgetRef ref, Widget? child) {
         final bool counter = ref.watch(timerProvider.select((value) => value.changed));
         final List<CryptoIdModel> cryptos = ref.watch(cryptoIdsProvider);
-        print(cryptos);
         ref.watch(cryptoIdsProvider.notifier).setPrices();
         final SearchModel searching = ref.watch(searchIdProvider);
         if (searching.isSearching == true && searching.searchedId.isNotEmpty) {
@@ -84,7 +83,7 @@ class ReorderableListViewWidget extends StatelessWidget {
         return ListTileWidget(
           isNewId: false,
           crypto: cryptos[index],
-          key: ValueKey(cryptos[index].id + cryptos[index].name + cryptos[index].price.toString()),
+          key: ValueKey(index),
         );
       },
       itemCount: cryptos.length,

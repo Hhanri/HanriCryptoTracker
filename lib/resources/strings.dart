@@ -4,4 +4,5 @@ class TitleStrings {
 
 class SystemStrings {
   static const String appTitle = "Hanri Crypto Tracker";
+  static const String browseTitle = "Browse";
 }

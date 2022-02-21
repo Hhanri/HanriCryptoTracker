@@ -16,10 +16,12 @@ class ListTileWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(crypto.id),
-      trailing: PriceDisplayWidget(
-        cryptoPrice: crypto.price,
-        cryptoPriceChange: crypto.priceChange,
-      ),
+      trailing: isNewId
+        ? AddNewCryptoButtonWidget(crypto: crypto)
+        : PriceDisplayWidget(
+            cryptoPrice: crypto.price,
+            cryptoPriceChange: crypto.priceChange,
+          )
     );
   }
 }

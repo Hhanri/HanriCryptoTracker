@@ -1,3 +1,4 @@
+import 'package:crypto_tracker/pages/browse_page.dart';
 import 'package:crypto_tracker/porviders/providers.dart';
 import 'package:crypto_tracker/porviders/search_notifier.dart';
 import 'package:crypto_tracker/resources/strings.dart';
@@ -5,7 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AppBarWidget extends StatelessWidget with PreferredSizeWidget{
-  const AppBarWidget({Key? key}) : super(key: key);
+  final bool isHome;
+  const AppBarWidget({
+    Key? key,
+    required this.isHome
+  }) : super(key: key);
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
   @override
@@ -29,7 +34,9 @@ class AppBarWidget extends StatelessWidget with PreferredSizeWidget{
                   hintText: TitleStrings.searchId,
                 ),
               )
-            : const Text(SystemStrings.appTitle),
+            : isHome
+              ? const Text(SystemStrings.appTitle)
+              : const Text(SystemStrings.browseTitle),
             elevation: 0,
             actions: [
             IconButton(
@@ -45,7 +52,13 @@ class AppBarWidget extends StatelessWidget with PreferredSizeWidget{
                 ? const Icon(Icons.clear)
                 : const Icon(Icons.search)
             ),
-            AppBarAddButtonWidget(isVisible: searching.isSearching ? false : true)
+            AppBarAddButtonWidget(
+              isVisible: isHome
+                ? searching.isSearching
+                  ? false
+                  : true
+                : false
+            )
           ],
         );
       }
@@ -66,7 +79,9 @@ class AppBarAddButtonWidget extends StatelessWidget {
       visible: isVisible,
       child: IconButton(
         onPressed: () {
-          //navigate to browse cryptos page
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const BrowseScreen())
+          );
         },
         icon: const Icon(Icons.add)
       ),

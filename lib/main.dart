@@ -1,7 +1,6 @@
+import 'package:crypto_tracker/pages/home_page.dart';
 import 'package:crypto_tracker/porviders/providers.dart';
 import 'package:crypto_tracker/resources/strings.dart';
-import 'package:crypto_tracker/widgets/appbar_widget.dart';
-import 'package:crypto_tracker/widgets/list_view_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -39,19 +38,7 @@ class _MyAppState extends ConsumerState<MyApp> {
         primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,
-      home: const MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      appBar: AppBarWidget(),
-      body: ListViewWidget()
+      home: const HomeScreen(),
     );
   }
 }
