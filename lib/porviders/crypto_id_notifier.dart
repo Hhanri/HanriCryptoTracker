@@ -1,11 +1,15 @@
 import 'package:crypto_tracker/models/crypto_id_model.dart';
+import 'package:crypto_tracker/models/price_model.dart';
 import 'package:crypto_tracker/services/api_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CryptoIdNotifier extends StateNotifier<List<CryptoIdModel>> {
   CryptoIdNotifier() : super(_initialState);
 
-  static final List<CryptoIdModel> _initialState = [const CryptoIdModel(id: "BTC", name: "BTC", price: "", priceChange: 0)];
+  static final List<CryptoIdModel> _initialState = [
+    const CryptoIdModel(id: "BTC", name: "BTC", price: 0, priceChange: 0),
+    const CryptoIdModel(id: "ETH", name: "ETH", price: 0, priceChange: 0),
+  ];
 
   List<String> getIds() {
     return state.map((e) => e.id).toList();

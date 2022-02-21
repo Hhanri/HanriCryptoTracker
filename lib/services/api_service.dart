@@ -1,6 +1,5 @@
 import 'dart:convert';
-
-import 'package:equatable/equatable.dart';
+import 'package:crypto_tracker/models/price_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 
@@ -17,22 +16,11 @@ class APIService {
     final Response response = await http.get(Uri.parse(url));
     final body = jsonDecode(response.body) as List<dynamic>;
     for (var element in body) {
-      print(element["price"]);
-      print(element["1d"]["price_change"]);
-      prices.add(PriceModel(price: element["price"] ?? "error", priceChange: double.parse(element["1d"]["price_change"] ?? "0")));
+      print(element[PriceModel.priceKey]);
+      print(element[PriceModel.dailyKey][PriceModel.priceChangeKey]);
+      prices.add(PriceModel.getPriceModel(element));
     }
     print(prices);
     return prices;
   }
-}
-
-class PriceModel extends Equatable {
-  final String price;
-  final double priceChange;
-
-  const PriceModel({required this.price, required this.priceChange});
-
-  @override
-  // TODO: implement props
-  List<Object?> get props => [price, priceChange];
 }

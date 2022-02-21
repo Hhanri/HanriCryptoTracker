@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 class CryptoIdModel extends Equatable{
   final String id;
   final String name;
-  final String price;
+  final double price;
   final double priceChange;
   const CryptoIdModel({
     required this.id,
