@@ -16,7 +16,6 @@ class CryptoIdNotifier extends StateNotifier<List<CryptoIdModel>> {
     for (String element in savedData) {
       loadedData.add(CryptoIdModel.fromMap(jsonDecode(element)));
     }
-    print("savedData = $loadedData");
     state = loadedData;
   }
 
@@ -26,7 +25,6 @@ class CryptoIdNotifier extends StateNotifier<List<CryptoIdModel>> {
     for (CryptoIdModel element in state) {
       savedData.add(jsonEncode(CryptoIdModel.toMap(element)));
     }
-    print(savedData);
     prefs.setStringList("save", savedData);
   }
 

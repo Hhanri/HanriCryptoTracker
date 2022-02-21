@@ -12,7 +12,7 @@ class APIService {
 
   static Future<List<CryptoIdModel>> getPrices(List<String> ids) async {
     final String url = "$urlBody$apiKeyExtension$apiKey$idsExtension${ids.join(",")}";
-    print(url);
+
     List<CryptoIdModel> cryptos = [];
     for (int i = 0; i < ids.length; i++) {
       cryptos.add(CryptoIdModel.blankModel);
