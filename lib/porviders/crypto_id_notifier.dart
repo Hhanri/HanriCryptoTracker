@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class CryptoIdNotifier extends StateNotifier<List<CryptoIdModel>> {
   CryptoIdNotifier() : super(_initialState);
 
-  static final List<CryptoIdModel> _initialState = [const CryptoIdModel(id: "BTC", name: "BTC", price: "")];
+  static final List<CryptoIdModel> _initialState = [const CryptoIdModel(id: "BTC", name: "BTC", price: "", priceChange: 0)];
 
   List<String> getIds() {
     return state.map((e) => e.id).toList();
@@ -14,11 +14,18 @@ class CryptoIdNotifier extends StateNotifier<List<CryptoIdModel>> {
   void setPrices() async {
     try {
       final List<String> ids = getIds();
-      final List<String> prices = await APIService.getPrices(ids);
+      final List<PriceModel> prices = await APIService.getPrices(ids);
       List<CryptoIdModel> newState = [];
       for (var element in state) {
         int index = state.indexOf(element);
-        newState.add(CryptoIdModel(id: element.id, name: element.name, price: prices[index]));
+        newState.add(
+          CryptoIdModel(
+            id: element.id,
+            name: element.name,
+            price: prices[index].price,
+            priceChange: prices[index].priceChange
+          )
+        );
       }
       state = newState;
     } catch(e) {

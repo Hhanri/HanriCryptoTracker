@@ -31,6 +31,7 @@ class _MyAppState extends ConsumerState<MyApp> {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
+        brightness: Brightness.dark,
         primarySwatch: Colors.blue,
       ),
       home: const MyHomePage(),
@@ -50,7 +51,10 @@ class MyHomePage extends StatelessWidget {
           bool counter = ref.watch(timerProvider.select((value) => value.changed));
           return Center(
             child: Text(
-              ref.watch(cryptoIdsProvider).first.price
+              ref.watch(cryptoIdsProvider).first.price,
+              style: TextStyle(
+                color: ref.watch(cryptoIdsProvider).first.priceChange.isNegative ? Colors.red : Colors.green
+              ),
             ),
           );
         }
