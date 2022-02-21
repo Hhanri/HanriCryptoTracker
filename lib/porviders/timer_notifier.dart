@@ -4,12 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class TimerNotifier extends StateNotifier<TimerModel> {
   TimerNotifier() : super(_initialState);
 
-  static final _initialState = TimerModel(timer: 10, changed: false);
+  static final _initialState = TimerModel(timer: 1, changed: false);
   final Ticker _ticker = Ticker();
   StreamSubscription<void>? _tickerSubscription;
 
   void start()async {
-    _startTimer(10);
+    _startTimer(1);
   }
 
   void _startTimer(int timer) {
