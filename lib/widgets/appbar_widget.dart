@@ -45,9 +45,31 @@ class AppBarWidget extends StatelessWidget with PreferredSizeWidget{
                 ? const Icon(Icons.clear)
                 : const Icon(Icons.search)
             ),
+            AppBarAddButtonWidget(isVisible: searching.isSearching ? false : true)
           ],
         );
       }
+    );
+  }
+}
+
+class AppBarAddButtonWidget extends StatelessWidget {
+  final bool isVisible;
+  const AppBarAddButtonWidget({
+    Key? key,
+    required this.isVisible
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Visibility(
+      visible: isVisible,
+      child: IconButton(
+        onPressed: () {
+          //navigate to browse cryptos page
+        },
+        icon: const Icon(Icons.add)
+      ),
     );
   }
 }

@@ -38,6 +38,7 @@ class _MyAppState extends ConsumerState<MyApp> {
         brightness: Brightness.dark,
         primarySwatch: Colors.blue,
       ),
+      debugShowCheckedModeBanner: false,
       home: const MyHomePage(),
     );
   }

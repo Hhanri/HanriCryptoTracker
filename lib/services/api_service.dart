@@ -10,17 +10,14 @@ class APIService {
   static const String idsExtension = "&ids=";
   static const String attributesExtensions = "&attributes=id,name,logo_url";
 
-  static Future<List<CryptoIdModel>> getPrices(List<String> ids) async {
+  static Future<List<CryptoIdModel>> getPrices(List<CryptoIdModel> cryptos) async {
+    final List<String> ids = cryptos.map((e) => e.name).toList();
     final String url = "$urlBody$apiKeyExtension$apiKey$idsExtension${ids.join(",")}";
-
-    List<CryptoIdModel> cryptos = [];
-    for (int i = 0; i < ids.length; i++) {
-      cryptos.add(CryptoIdModel.blankModel);
-    }
     final Response response = await http.get(Uri.parse(url));
     final body = jsonDecode(response.body) as List<dynamic>;
     for (var element in body) {
-      cryptos[ids.indexWhere((e) => e == element[CryptoIdModel.idKey])] = CryptoIdModel.getCryptoIdModel(element);
+      int index = body.indexOf(element);
+      cryptos[index] = CryptoIdModel.getCryptoIdModel(element);
     }
     return cryptos;
   }

@@ -1,11 +1,15 @@
 import 'package:crypto_tracker/models/crypto_id_model.dart';
+import 'package:crypto_tracker/porviders/providers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ListTileWidget extends StatelessWidget {
   final CryptoIdModel crypto;
+  final bool isNewId;
   const ListTileWidget({
     Key? key,
     required this.crypto,
+    required this.isNewId,
   }) : super(key: key);
 
   @override
@@ -50,3 +54,24 @@ class PriceDisplayWidget extends StatelessWidget {
   }
 }
 
+class AddNewCryptoButtonWidget extends StatelessWidget {
+  final CryptoIdModel crypto;
+  const AddNewCryptoButtonWidget({
+    Key? key,
+    required this.crypto
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(
+      builder: (BuildContext context, WidgetRef ref, Widget? child) {
+        return IconButton(
+          onPressed: () {
+            ref.watch(cryptoIdsProvider.notifier).addId(crypto);
+          },
+          icon: const Icon(Icons.add)
+        );
+      }
+    );
+  }
+}

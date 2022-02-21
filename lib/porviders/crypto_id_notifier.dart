@@ -30,12 +30,19 @@ class CryptoIdNotifier extends StateNotifier<List<CryptoIdModel>> {
 
   void setPrices() async {
     try {
-      final List<CryptoIdModel> cryptos = await APIService.getPrices(state.map((e)=>e.id).toList());
+      final List<CryptoIdModel> cryptos = await APIService.getPrices(state);
       state = [...cryptos];
       save();
     } catch(e) {
       print("error");
     }
+  }
+
+  void addId(CryptoIdModel crypto) {
+    List<CryptoIdModel> temporaryState = [...state];
+    temporaryState.add(crypto);
+    state = temporaryState;
+    save();
   }
 
   void swapIds(int oldIndex, int newIndex, CryptoIdModel crypto) {

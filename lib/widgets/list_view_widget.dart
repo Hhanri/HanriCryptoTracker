@@ -60,7 +60,7 @@ class SimpleListViewWidget extends StatelessWidget {
       itemCount: cryptos.length,
       physics: const ClampingScrollPhysics(),
       itemBuilder: (BuildContext context, int index) {
-        return ListTileWidget(crypto: cryptos[index]);
+        return ListTileWidget(crypto: cryptos[index], isNewId: false);
       },
     );
   }
@@ -82,6 +82,7 @@ class ReorderableListViewWidget extends StatelessWidget {
       physics: const ClampingScrollPhysics(),
       itemBuilder: (BuildContext context, int index) {
         return ListTileWidget(
+          isNewId: false,
           crypto: cryptos[index],
           key: ValueKey(cryptos[index].id + cryptos[index].name + cryptos[index].price.toString()),
         );
