@@ -3,20 +3,31 @@ import 'package:flutter/material.dart';
 
 class ListTileWidget extends StatelessWidget {
   final CryptoIdModel crypto;
-  const ListTileWidget({Key? key, required this.crypto}) : super(key: key);
+  const ListTileWidget({
+    Key? key,
+    required this.crypto,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(crypto.id),
-      trailing: PriceDisplayWidget(crypto: crypto),
+      trailing: PriceDisplayWidget(
+        cryptoPrice: crypto.price,
+        cryptoPriceChange: crypto.priceChange,
+      ),
     );
   }
 }
 
 class PriceDisplayWidget extends StatelessWidget {
-  final CryptoIdModel crypto;
-  const PriceDisplayWidget({Key? key, required this.crypto}) : super(key: key);
+  final double cryptoPrice;
+  final double cryptoPriceChange;
+  const PriceDisplayWidget({
+    Key? key,
+    required this.cryptoPrice,
+    required this.cryptoPriceChange
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,14 +35,14 @@ class PriceDisplayWidget extends StatelessWidget {
       child: Row(
         children: [
           Text(
-            "${crypto.price.toStringAsFixed(2)} \$",
+            "${cryptoPrice.toStringAsFixed(2)} \$",
             style: TextStyle(
-              color: crypto.priceChange.isNegative ? Colors.red : Colors.green
+              color: cryptoPriceChange.isNegative ? Colors.red : Colors.green
             ),
           ),
           Icon(
-            crypto.priceChange.isNegative ? Icons.arrow_drop_down : Icons.arrow_drop_up,
-            color: crypto.priceChange.isNegative ? Colors.red : Colors.green,
+            cryptoPriceChange.isNegative ? Icons.arrow_drop_down : Icons.arrow_drop_up,
+            color: cryptoPriceChange.isNegative ? Colors.red : Colors.green,
           )
         ],
       ),

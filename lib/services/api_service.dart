@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:crypto_tracker/models/price_model.dart';
+import 'package:crypto_tracker/models/crypto_id_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 
@@ -8,19 +8,20 @@ class APIService {
   static const String urlBody = "https://api.nomics.com/v1/currencies/ticker?";
   static const String apiKeyExtension = "key=";
   static const String idsExtension = "&ids=";
-  static const String attributesExtensions = "&attributes=id,name,logo_url,price";
+  static const String attributesExtensions = "&attributes=id,name,logo_url";
 
-  static Future<List<PriceModel>> getPrices(List<String> ids) async {
-    final String url = "$urlBody$apiKeyExtension$apiKey$idsExtension${ids.join(",")}$attributesExtensions";
-    List<PriceModel> prices = [];
+  static Future<List<CryptoIdModel>> getPrices(List<String> ids) async {
+    final String url = "$urlBody$apiKeyExtension$apiKey$idsExtension${ids.join(",")}";
+    print(url);
+    List<CryptoIdModel> cryptos = [];
+    for (int i = 0; i < ids.length; i++) {
+      cryptos.add(CryptoIdModel.blankModel);
+    }
     final Response response = await http.get(Uri.parse(url));
     final body = jsonDecode(response.body) as List<dynamic>;
     for (var element in body) {
-      print(element[PriceModel.priceKey]);
-      print(element[PriceModel.dailyKey][PriceModel.priceChangeKey]);
-      prices.add(PriceModel.getPriceModel(element));
+      cryptos[ids.indexWhere((e) => e == element[CryptoIdModel.idKey])] = CryptoIdModel.getCryptoIdModel(element);
     }
-    print(prices);
-    return prices;
+    return cryptos;
   }
 }
