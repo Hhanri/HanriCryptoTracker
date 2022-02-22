@@ -18,7 +18,7 @@ class HomeListViewWidget extends StatelessWidget {
         final SearchModel searching = ref.watch(searchIdProvider);
         if (searching.isSearching == true && searching.searchedId.isNotEmpty) {
           final List<CryptoIdModel> searchedIds = cryptos.where(
-            (element) => element.id.toLowerCase().startsWith(searching.searchedId.toLowerCase()) || element.name.contains(searching.searchedId.toLowerCase())
+            (element) => element.id.toLowerCase().startsWith(searching.searchedId.toLowerCase()) || element.name.startsWith(searching.searchedId.toLowerCase())
           ).toList();
           if (searchedIds.isNotEmpty) {
             return SimpleListViewWidget(cryptos: searchedIds, isNewId: false);
@@ -60,7 +60,7 @@ class BrowseListViewWidget extends StatelessWidget {
         final SearchModel searching = ref.watch(searchIdProvider);
         if (searching.isSearching && searching.searchedId.isNotEmpty) {
           final List<CryptoIdModel> searchedIds = cryptos.where(
-            (element) => element.id.toLowerCase().startsWith(searching.searchedId.toLowerCase()) || element.name.contains(searching.searchedId.toLowerCase())
+            (element) => element.id.toLowerCase().startsWith(searching.searchedId.toLowerCase()) || element.name.toLowerCase().toLowerCase().startsWith(searching.searchedId.toLowerCase())
           ).toList();
           if (searchedIds.isNotEmpty) {
             return SimpleListViewWidget(cryptos: searchedIds, isNewId: true);

@@ -2,6 +2,7 @@ import 'package:crypto_tracker/models/crypto_id_model.dart';
 import 'package:crypto_tracker/porviders/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class ListTileWidget extends StatelessWidget {
   final CryptoIdModel crypto;
@@ -15,6 +16,7 @@ class ListTileWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      leading: BuildLogo(url: crypto.logo),
       title: Text(crypto.id),
       trailing: isNewId
         ? AddNewCryptoButtonWidget(crypto: crypto)
@@ -25,6 +27,30 @@ class ListTileWidget extends StatelessWidget {
     );
   }
 }
+
+class BuildLogo extends StatelessWidget {
+  final String url;
+  const BuildLogo({
+    Key? key, 
+    required this.url
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final bool hasUrl = url.isNotEmpty;
+    final bool isSvg = url.endsWith(".svg");
+    return CircleAvatar(
+      backgroundColor: Colors.transparent,
+      radius: 15,
+      child: hasUrl
+        ? isSvg
+          ? SvgPicture.network(url)
+          : Image.network(url)
+        : Container(),
+    );
+  }
+}
+
 
 class PriceDisplayWidget extends StatelessWidget {
   final double cryptoPrice;

@@ -61,11 +61,4 @@ class CryptoIdNotifier extends StateNotifier<List<CryptoIdModel>> {
     state = temporaryState;
     save();
   }
-  void manualLoadState(){
-    state = [
-      const CryptoIdModel(id: "BTC", name: "Bitcoin", price: 0, priceChange: 0),
-      const CryptoIdModel(id: "ETH", name: "Ethereum", price: 0, priceChange: 0)
-    ];
-    save();
-  }
 }

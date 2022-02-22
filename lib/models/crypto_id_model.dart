@@ -1,20 +1,23 @@
 import 'package:equatable/equatable.dart';
 class CryptoIdModel extends Equatable{
+  final String logo;
   final String id;
   final String name;
   final double price;
   final double priceChange;
   const CryptoIdModel({
+    required this.logo,
     required this.id,
     required this.name,
     required this.price,
     required this.priceChange
   });
 
-  static const blankModel = CryptoIdModel(id: "", name: "", price: 0, priceChange: 0);
+  static const blankModel = CryptoIdModel(logo: "", id: "", name: "", price: 0, priceChange: 0);
 
   static Map<String,dynamic> toMap(CryptoIdModel data) {
     return {
+      logoKey: data.logo,
       idKey: data.id,
       nameKey: data.name,
       priceKey: data.price,
@@ -24,6 +27,7 @@ class CryptoIdModel extends Equatable{
 
   factory CryptoIdModel.fromMap(Map<String,dynamic> data) {
     return CryptoIdModel(
+      logo: data[logoKey],
       id: data[idKey],
       name: data[nameKey],
       price: data[priceKey],
@@ -45,6 +49,7 @@ class CryptoIdModel extends Equatable{
       price = 0.0;
     }
     return CryptoIdModel(
+      logo: data["logo_url"],
       id: data["id"],
       name: data["name"],
       price: onlyId ? 0.0 : price,
@@ -52,6 +57,7 @@ class CryptoIdModel extends Equatable{
     );
   }
 
+  static const String logoKey = "logo";
   static const String idKey = "id";
   static const String nameKey = "name";
   static const String priceKey = "price";
