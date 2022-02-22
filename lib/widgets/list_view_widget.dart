@@ -1,7 +1,6 @@
 import 'package:crypto_tracker/models/crypto_id_model.dart';
 import 'package:crypto_tracker/porviders/providers.dart';
 import 'package:crypto_tracker/porviders/search_notifier.dart';
-import 'package:crypto_tracker/resources/strings.dart';
 import 'package:crypto_tracker/widgets/list_tile_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,7 +18,7 @@ class HomeListViewWidget extends StatelessWidget {
         final SearchModel searching = ref.watch(searchIdProvider);
         if (searching.isSearching == true && searching.searchedId.isNotEmpty) {
           final List<CryptoIdModel> searchedIds = cryptos.where(
-            (element) => element.id.toLowerCase().contains(searching.searchedId.toLowerCase()) || element.name.contains(searching.searchedId.toLowerCase())
+            (element) => element.id.toLowerCase().startsWith(searching.searchedId.toLowerCase()) || element.name.contains(searching.searchedId.toLowerCase())
           ).toList();
           if (searchedIds.isNotEmpty) {
             return SimpleListViewWidget(cryptos: searchedIds, isNewId: false);
@@ -61,7 +60,7 @@ class BrowseListViewWidget extends StatelessWidget {
         final SearchModel searching = ref.watch(searchIdProvider);
         if (searching.isSearching && searching.searchedId.isNotEmpty) {
           final List<CryptoIdModel> searchedIds = cryptos.where(
-            (element) => element.id.toLowerCase().contains(searching.searchedId.toLowerCase()) || element.name.contains(searching.searchedId.toLowerCase())
+            (element) => element.id.toLowerCase().startsWith(searching.searchedId.toLowerCase()) || element.name.contains(searching.searchedId.toLowerCase())
           ).toList();
           if (searchedIds.isNotEmpty) {
             return SimpleListViewWidget(cryptos: searchedIds, isNewId: true);
@@ -109,23 +108,19 @@ class ReorderableListViewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ReorderableListView.builder(
-          physics: const ClampingScrollPhysics(),
-          itemBuilder: (BuildContext context, int index) {
-            return ListTileWidget(
-              isNewId: false,
-              crypto: cryptos[index],
-              key: ValueKey(cryptos[index].id + cryptos[index].name),
-            );
-          },
-          itemCount: cryptos.length,
-          onReorder: (int oldIndex, int newIndex) {
-            onReorder(oldIndex, newIndex);
-          }
-        ),
-      ],
+    return ReorderableListView.builder(
+      physics: const ClampingScrollPhysics(),
+      itemBuilder: (BuildContext context, int index) {
+        return ListTileWidget(
+          isNewId: false,
+          crypto: cryptos[index],
+          key: ValueKey(cryptos[index].id + cryptos[index].name),
+        );
+      },
+      itemCount: cryptos.length,
+      onReorder: (int oldIndex, int newIndex) {
+        onReorder(oldIndex, newIndex);
+      }
     );
   }
 }

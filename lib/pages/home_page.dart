@@ -12,7 +12,7 @@ class HomeScreen extends StatelessWidget {
     return const Scaffold(
       appBar: AppBarWidget(isHome: true),
       body: HomeListViewWidget(),
-      bottomSheet: BottomSheetWidget(),
+      //bottomSheet: BottomSheetWidget(),
     );
   }
 }
