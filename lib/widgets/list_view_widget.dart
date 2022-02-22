@@ -1,6 +1,7 @@
 import 'package:crypto_tracker/models/crypto_id_model.dart';
 import 'package:crypto_tracker/porviders/providers.dart';
 import 'package:crypto_tracker/porviders/search_notifier.dart';
+import 'package:crypto_tracker/resources/strings.dart';
 import 'package:crypto_tracker/widgets/list_tile_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -75,7 +76,6 @@ class BrowseListViewWidget extends StatelessWidget {
   }
 }
 
-
 class SimpleListViewWidget extends StatelessWidget {
   final List<CryptoIdModel> cryptos;
   final bool isNewId;
@@ -109,19 +109,23 @@ class ReorderableListViewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ReorderableListView.builder(
-      physics: const ClampingScrollPhysics(),
-      itemBuilder: (BuildContext context, int index) {
-        return ListTileWidget(
-          isNewId: false,
-          crypto: cryptos[index],
-          key: ValueKey(cryptos[index].id + cryptos[index].name),
-        );
-      },
-      itemCount: cryptos.length,
-      onReorder: (int oldIndex, int newIndex) {
-        onReorder(oldIndex, newIndex);
-      }
+    return Column(
+      children: [
+        ReorderableListView.builder(
+          physics: const ClampingScrollPhysics(),
+          itemBuilder: (BuildContext context, int index) {
+            return ListTileWidget(
+              isNewId: false,
+              crypto: cryptos[index],
+              key: ValueKey(cryptos[index].id + cryptos[index].name),
+            );
+          },
+          itemCount: cryptos.length,
+          onReorder: (int oldIndex, int newIndex) {
+            onReorder(oldIndex, newIndex);
+          }
+        ),
+      ],
     );
   }
 }
