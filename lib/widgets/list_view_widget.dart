@@ -21,7 +21,7 @@ class HomeListViewWidget extends StatelessWidget {
             (element) => element.id.toLowerCase().contains(searching.searchedId.toLowerCase()) || element.name.contains(searching.searchedId.toLowerCase())
           ).toList();
           if (searchedIds.isNotEmpty) {
-            return SimpleListViewWidget(cryptos: searchedIds);
+            return SimpleListViewWidget(cryptos: searchedIds, isNewId: false);
           } else {
             return const Center(child: Text("no result found"));
           }
@@ -46,25 +46,57 @@ class HomeListViewWidget extends StatelessWidget {
   }
 }
 
-class SimpleListViewWidget extends StatelessWidget {
+class BrowseListViewWidget extends StatelessWidget {
   final List<CryptoIdModel> cryptos;
-  const SimpleListViewWidget({
+  const BrowseListViewWidget({
     Key? key,
     required this.cryptos
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: cryptos.length,
-      physics: const ClampingScrollPhysics(),
-      itemBuilder: (BuildContext context, int index) {
-        return ListTileWidget(crypto: cryptos[index], isNewId: false);
+    return Consumer(
+      builder: (BuildContext context, WidgetRef ref, Widget? child) {
+        final SearchModel searching = ref.watch(searchIdProvider);
+        if (searching.isSearching && searching.searchedId.isNotEmpty) {
+          final List<CryptoIdModel> searchedIds = cryptos.where(
+            (element) => element.id.toLowerCase().contains(searching.searchedId.toLowerCase()) || element.name.contains(searching.searchedId.toLowerCase())
+          ).toList();
+          if (searchedIds.isNotEmpty) {
+            return SimpleListViewWidget(cryptos: searchedIds, isNewId: true);
+          } else {
+            return const Center(child: Text("no result found"));
+          }
+        } else {
+          return SimpleListViewWidget(cryptos: cryptos, isNewId: true);
+        }
       },
     );
   }
 }
 
+
+class SimpleListViewWidget extends StatelessWidget {
+  final List<CryptoIdModel> cryptos;
+  final bool isNewId;
+  const SimpleListViewWidget({
+    Key? key,
+    required this.cryptos,
+    required this.isNewId
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    print(cryptos);
+    return ListView.builder(
+      itemCount: cryptos.length,
+      physics: const ClampingScrollPhysics(),
+      itemBuilder: (BuildContext context, int index) {
+        return ListTileWidget(crypto: cryptos[index], isNewId: isNewId);
+      },
+    );
+  }
+}
 
 class ReorderableListViewWidget extends StatelessWidget {
   final List<CryptoIdModel> cryptos;
@@ -83,7 +115,7 @@ class ReorderableListViewWidget extends StatelessWidget {
         return ListTileWidget(
           isNewId: false,
           crypto: cryptos[index],
-          key: ValueKey(index),
+          key: ValueKey(cryptos[index].id + cryptos[index].name),
         );
       },
       itemCount: cryptos.length,

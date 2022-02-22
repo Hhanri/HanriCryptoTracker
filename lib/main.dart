@@ -24,8 +24,8 @@ class _MyAppState extends ConsumerState<MyApp> {
   void initState() {
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_) {
-      ref.watch(timerProvider.notifier).start();
       ref.watch(cryptoIdsProvider.notifier).loadInitialState();
+      ref.watch(timerProvider.notifier).start();
     });
   }
 

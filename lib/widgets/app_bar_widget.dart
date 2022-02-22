@@ -20,6 +20,8 @@ class AppBarWidget extends StatelessWidget with PreferredSizeWidget{
       builder: (BuildContext context, WidgetRef ref, Widget? child) {
         final SearchModel searching = ref.watch(searchIdProvider);
         return AppBar(
+          automaticallyImplyLeading: false,
+          leading: isHome ? null : const AppBarGoBackIconButton(),
           title: searching.isSearching
             ? TextField(
                 focusNode: focusNode,
@@ -65,6 +67,26 @@ class AppBarWidget extends StatelessWidget with PreferredSizeWidget{
     );
   }
 }
+
+class AppBarGoBackIconButton extends StatelessWidget {
+  const AppBarGoBackIconButton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(
+      builder: (BuildContext context, WidgetRef ref, Widget? child) {
+        return IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            ref.watch(searchIdProvider.notifier).openSearchBar();
+            Navigator.of(context).pop();
+          },
+        );
+      }
+    );
+  }
+}
+
 
 class AppBarAddButtonWidget extends StatelessWidget {
   final bool isVisible;
