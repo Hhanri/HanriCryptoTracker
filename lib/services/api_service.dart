@@ -11,11 +11,12 @@ class APIService {
   static const String apiKeyExtension = "?key=";
   static const String idsExtension = "&ids=";
   static const String attributesExtensions = "&attributes=id,name,logo_url";
+  static const String intervalExtensions = "&interval=1h";
   static const String rankSortingExtensions = "&sort=rank";
 
   static Future<List<PriceModel>> getPrices(List<CryptoIdModel> cryptos) async {
     final List<String> ids = cryptos.map((e) => e.id).toList();
-    final String url = "$urlBody$tickerPath$apiKeyExtension$apiKey$idsExtension${ids.join(",")}";
+    final String url = "$urlBody$tickerPath$apiKeyExtension$apiKey$idsExtension${ids.join(",")}$intervalExtensions";
     List<PriceModel> newPrices = [];
     for (int i = 0; i < ids.length; i++) {
       newPrices.add(PriceModel.blankModel);
