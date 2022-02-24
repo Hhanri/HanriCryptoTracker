@@ -88,7 +88,6 @@ class SimpleListViewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(cryptos);
     if (isNewId) {
       print("building search list view");
       return ListView.builder(

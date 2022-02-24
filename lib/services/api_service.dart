@@ -8,9 +8,10 @@ class APIService {
   static const String apiKey = "c64645f4cfb004d4dfab5e1fb5a2ce30a9864275";
   static const String urlBody = "https://api.nomics.com/v1/currencies";
   static const String tickerPath = "/ticker";
-    static const String apiKeyExtension = "?key=";
+  static const String apiKeyExtension = "?key=";
   static const String idsExtension = "&ids=";
   static const String attributesExtensions = "&attributes=id,name,logo_url";
+  static const String rankSortingExtensions = "&sort=rank";
 
   static Future<List<PriceModel>> getPrices(List<CryptoIdModel> cryptos) async {
     final List<String> ids = cryptos.map((e) => e.id).toList();

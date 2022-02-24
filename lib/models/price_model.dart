@@ -9,7 +9,7 @@ class PriceModel extends Equatable{
     required this.priceChange
   });
 
-  static final blankModel = PriceModel(price: 0, priceChange: 0);
+  static const blankModel = PriceModel(price: 0, priceChange: 0);
 
   factory PriceModel.getPriceModel(Map<String,dynamic> data, bool onlyId){
     double priceChange;

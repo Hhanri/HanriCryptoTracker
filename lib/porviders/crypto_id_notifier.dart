@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:crypto_tracker/models/crypto_id_model.dart';
-import 'package:crypto_tracker/services/api_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

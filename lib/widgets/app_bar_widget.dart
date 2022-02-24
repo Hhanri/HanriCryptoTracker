@@ -75,10 +75,13 @@ class AppBarGoBackIconButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (BuildContext context, WidgetRef ref, Widget? child) {
+        final SearchModel searching = ref.watch(searchIdProvider);
         return IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            ref.watch(searchIdProvider.notifier).openSearchBar();
+            if (searching.isSearching) {
+              ref.watch(searchIdProvider.notifier).openSearchBar();
+            }
             Navigator.of(context).pop();
           },
         );

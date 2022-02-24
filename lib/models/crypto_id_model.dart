@@ -28,19 +28,7 @@ class CryptoIdModel extends Equatable{
   }
 
   factory CryptoIdModel.getCryptoIdModel(Map<String,dynamic> data, bool onlyId){
-    double priceChange;
-    double price;
-    try {
-      priceChange = double.parse(data["1d"]["price_change"]);
-    } catch(e) {
-      priceChange = 0.0;
-    }
-    try {
-      price = double.parse(data["price"]);
-    } catch(e) {
-      price = 0.0;
-    }
-    return CryptoIdModel(
+        return CryptoIdModel(
       logo: data["logo_url"],
       id: data["id"],
       name: data["name"],
