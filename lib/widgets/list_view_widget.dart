@@ -1,6 +1,8 @@
 import 'package:crypto_tracker/models/crypto_id_model.dart';
+import 'package:crypto_tracker/models/price_model.dart';
 import 'package:crypto_tracker/porviders/providers.dart';
 import 'package:crypto_tracker/porviders/search_notifier.dart';
+import 'package:crypto_tracker/services/api_service.dart';
 import 'package:crypto_tracker/widgets/list_tile_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,8 +16,8 @@ class HomeListViewWidget extends StatelessWidget {
       builder: (BuildContext context, WidgetRef ref, Widget? child) {
         final bool counter = ref.watch(timerProvider.select((value) => value.changed));
         final List<CryptoIdModel> cryptos = ref.watch(cryptoIdsProvider);
-        ref.watch(cryptoIdsProvider.notifier).setPrices();
         final SearchModel searching = ref.watch(searchIdProvider);
+        print("rebuilt");
         if (searching.isSearching == true && searching.searchedId.isNotEmpty) {
           final List<CryptoIdModel> searchedIds = cryptos.where(
             (element) => element.id.toLowerCase().startsWith(searching.searchedId.toLowerCase()) || element.name.startsWith(searching.searchedId.toLowerCase())
@@ -87,13 +89,33 @@ class SimpleListViewWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print(cryptos);
-    return ListView.builder(
-      itemCount: cryptos.length,
-      physics: const ClampingScrollPhysics(),
-      itemBuilder: (BuildContext context, int index) {
-        return ListTileWidget(crypto: cryptos[index], isNewId: isNewId);
-      },
-    );
+    if (isNewId) {
+      print("building search list view");
+      return ListView.builder(
+        itemCount: cryptos.length,
+        physics: const ClampingScrollPhysics(),
+        itemBuilder: (BuildContext context, int index) {
+          return ListTileWidget(crypto: cryptos[index], isNewId: isNewId, price: PriceModel.blankModel);
+        },
+      );
+    } else {
+      return FutureBuilder(
+        future: APIService.getPrices(cryptos),
+        builder: (BuildContext context, AsyncSnapshot<List<PriceModel>> snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: cryptos.length,
+              physics: const ClampingScrollPhysics(),
+              itemBuilder: (BuildContext context, int index) {
+                return ListTileWidget(crypto: cryptos[index], isNewId: isNewId, price: snapshot.data![index],);
+              },
+            );
+          } else {
+            return const Center(child: CircularProgressIndicator(),);
+          }
+        },
+      );
+    }
   }
 }
 
@@ -108,20 +130,32 @@ class ReorderableListViewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ReorderableListView.builder(
-      physics: const ClampingScrollPhysics(),
-      itemBuilder: (BuildContext context, int index) {
-        return ListTileWidget(
-          isNewId: false,
-          crypto: cryptos[index],
-          key: ValueKey(cryptos[index].id + cryptos[index].name),
-        );
+    return FutureBuilder(
+      future: APIService.getPrices(cryptos),
+      builder: (BuildContext context, AsyncSnapshot<List<PriceModel>> snapshot) {
+        if (snapshot.hasData) {
+          return ReorderableListView.builder(
+              physics: const ClampingScrollPhysics(),
+              itemBuilder: (BuildContext context, int index) {
+                return ListTileWidget(
+                  isNewId: false,
+                  crypto: cryptos[index],
+                  key: ValueKey(cryptos[index].id + cryptos[index].name),
+                  price: snapshot.data![index]
+                );
+              },
+              itemCount: cryptos.length,
+              onReorder: (int oldIndex, int newIndex) {
+                onReorder(oldIndex, newIndex);
+              }
+          );
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
       },
-      itemCount: cryptos.length,
-      onReorder: (int oldIndex, int newIndex) {
-        onReorder(oldIndex, newIndex);
-      }
+
     );
+
   }
 }
 

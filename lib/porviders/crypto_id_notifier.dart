@@ -28,19 +28,6 @@ class CryptoIdNotifier extends StateNotifier<List<CryptoIdModel>> {
     prefs.setStringList("save", savedData);
   }
 
-  void setPrices() async {
-    if (state.isNotEmpty) {
-      try {
-        final List<CryptoIdModel> cryptos = await APIService.getPrices(state);
-        state = [...cryptos];
-        print("state = $state");
-        save();
-      } catch(e) {
-        //print("error");
-      }
-    }
-  }
-
   void addId(CryptoIdModel crypto) {
     print("new to add = $crypto");
     if (state.any((element) => element.id == crypto.id && element.name == crypto.name)) {

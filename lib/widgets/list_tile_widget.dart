@@ -1,4 +1,5 @@
 import 'package:crypto_tracker/models/crypto_id_model.dart';
+import 'package:crypto_tracker/models/price_model.dart';
 import 'package:crypto_tracker/porviders/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,10 +8,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 class ListTileWidget extends StatelessWidget {
   final CryptoIdModel crypto;
   final bool isNewId;
+  final PriceModel price;
   const ListTileWidget({
     Key? key,
     required this.crypto,
     required this.isNewId,
+    required this.price,
   }) : super(key: key);
 
   @override
@@ -21,8 +24,8 @@ class ListTileWidget extends StatelessWidget {
       trailing: isNewId
         ? AddNewCryptoButtonWidget(crypto: crypto)
         : PriceDisplayWidget(
-            cryptoPrice: crypto.price,
-            cryptoPriceChange: crypto.priceChange,
+            cryptoPrice: price.price,
+            cryptoPriceChange: price.priceChange,
           )
     );
   }

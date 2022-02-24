@@ -3,25 +3,19 @@ class CryptoIdModel extends Equatable{
   final String logo;
   final String id;
   final String name;
-  final double price;
-  final double priceChange;
   const CryptoIdModel({
     required this.logo,
     required this.id,
     required this.name,
-    required this.price,
-    required this.priceChange
   });
 
-  static const blankModel = CryptoIdModel(logo: "", id: "", name: "", price: 0, priceChange: 0);
+  static const blankModel = CryptoIdModel(logo: "", id: "", name: "");
 
   static Map<String,dynamic> toMap(CryptoIdModel data) {
     return {
       logoKey: data.logo,
       idKey: data.id,
       nameKey: data.name,
-      priceKey: data.price,
-      priceChangeKey: data.priceChange
     };
   }
 
@@ -30,8 +24,6 @@ class CryptoIdModel extends Equatable{
       logo: data[logoKey],
       id: data[idKey],
       name: data[nameKey],
-      price: data[priceKey],
-      priceChange: data[priceChangeKey]
     );
   }
 
@@ -52,8 +44,6 @@ class CryptoIdModel extends Equatable{
       logo: data["logo_url"],
       id: data["id"],
       name: data["name"],
-      price: onlyId ? 0.0 : price,
-      priceChange: onlyId ? 0.0 : priceChange
     );
   }
 
@@ -65,5 +55,5 @@ class CryptoIdModel extends Equatable{
 
   @override
   // TODO: implement props
-  List<Object?> get props => [id, name, price, priceChange];
+  List<Object?> get props => [id, name];
 }
