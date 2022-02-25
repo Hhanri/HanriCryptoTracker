@@ -133,6 +133,7 @@ class ReorderableListViewWidget extends StatelessWidget {
       future: APIService.getPrices(cryptos),
       builder: (BuildContext context, AsyncSnapshot<List<PriceModel>> snapshot) {
         if (snapshot.hasData) {
+          List<PriceModel> prices = snapshot.data!;
           return ReorderableListView.builder(
               physics: const ClampingScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
@@ -140,12 +141,16 @@ class ReorderableListViewWidget extends StatelessWidget {
                   isNewId: false,
                   crypto: cryptos[index],
                   key: ValueKey(cryptos[index].id + cryptos[index].name),
-                  price: snapshot.data![index]
+                  price: prices[index]
                 );
               },
               itemCount: cryptos.length,
               onReorder: (int oldIndex, int newIndex) {
                 onReorder(oldIndex, newIndex);
+                final int index = newIndex > oldIndex ? newIndex - 1 : newIndex;
+                final PriceModel movedPrice = prices[oldIndex];
+                prices.removeAt(oldIndex);
+                prices.insert(index, movedPrice);
               }
           );
         } else {
