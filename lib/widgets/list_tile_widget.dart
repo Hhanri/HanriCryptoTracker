@@ -1,6 +1,6 @@
 import 'package:crypto_tracker/models/crypto_id_model.dart';
 import 'package:crypto_tracker/models/price_model.dart';
-import 'package:crypto_tracker/porviders/providers.dart';
+import 'package:crypto_tracker/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';

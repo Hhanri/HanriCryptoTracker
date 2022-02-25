@@ -1,9 +1,12 @@
 import 'package:crypto_tracker/models/crypto_id_model.dart';
 import 'package:crypto_tracker/models/price_model.dart';
-import 'package:crypto_tracker/porviders/providers.dart';
-import 'package:crypto_tracker/porviders/search_notifier.dart';
+import 'package:crypto_tracker/providers/providers.dart';
+import 'package:crypto_tracker/providers/search_notifier.dart';
+import 'package:crypto_tracker/resources/strings.dart';
 import 'package:crypto_tracker/services/api_service.dart';
 import 'package:crypto_tracker/widgets/list_tile_widget.dart';
+import 'package:crypto_tracker/widgets/loading_widget.dart';
+import 'package:crypto_tracker/widgets/no_internet_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -17,32 +20,38 @@ class HomeListViewWidget extends StatelessWidget {
         final bool counter = ref.watch(timerProvider.select((value) => value.changed));
         final List<CryptoIdModel> cryptos = ref.watch(cryptoIdsProvider);
         final SearchModel searching = ref.watch(searchIdProvider);
+        final bool isConnectedToInternet = ref.watch(connectivityProvider);
         print("rebuilt");
-        if (searching.isSearching == true && searching.searchedId.isNotEmpty) {
-          final List<CryptoIdModel> searchedIds = cryptos.where(
-            (element) => element.id.toLowerCase().startsWith(searching.searchedId.toLowerCase()) || element.name.startsWith(searching.searchedId.toLowerCase())
-          ).toList();
-          if (searchedIds.isNotEmpty) {
-            return SimpleListViewWidget(cryptos: searchedIds, isNewId: false);
+        if (isConnectedToInternet) {
+          if (searching.isSearching == true && searching.searchedId.isNotEmpty) {
+            final List<CryptoIdModel> searchedIds = cryptos.where(
+                    (element) => element.id.toLowerCase().startsWith(searching.searchedId.toLowerCase()) || element.name.startsWith(searching.searchedId.toLowerCase())
+            ).toList();
+            if (searchedIds.isNotEmpty) {
+              return SimpleListViewWidget(cryptos: searchedIds, isNewId: false);
+            } else {
+              return const Center(child: Text("no result found"));
+            }
           } else {
-            return const Center(child: Text("no result found"));
+            if (cryptos.isNotEmpty){
+              return ReorderableListViewWidget(
+                  cryptos: cryptos,
+                  onReorder: (oldIndex, newIndex) {
+                    ref.watch(cryptoIdsProvider.notifier).swapIds(oldIndex, newIndex, cryptos[oldIndex]);
+                  }
+              );
+            } else {
+              return const Center(
+                child: Text(
+                  SystemStrings.noCryptoAdded
+                ),
+              );
+            }
           }
         } else {
-          if (cryptos.isNotEmpty){
-            return ReorderableListViewWidget(
-              cryptos: cryptos,
-              onReorder: (oldIndex, newIndex) {
-                ref.watch(cryptoIdsProvider.notifier).swapIds(oldIndex, newIndex, cryptos[oldIndex]);
-              }
-            );
-          } else {
-            return const Center(
-              child: Text(
-                "no crypto added"
-              ),
-            );
-          }
+          return const NoInternetWidget();
         }
+
       }
     );
   }
@@ -110,7 +119,7 @@ class SimpleListViewWidget extends StatelessWidget {
               },
             );
           } else {
-            return const Center(child: CircularProgressIndicator(),);
+            return const LoadingWidget();
           }
         },
       );
@@ -154,7 +163,7 @@ class ReorderableListViewWidget extends StatelessWidget {
               }
           );
         } else {
-          return const Center(child: CircularProgressIndicator());
+          return const LoadingWidget();
         }
       },
 

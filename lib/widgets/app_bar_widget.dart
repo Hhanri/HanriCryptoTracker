@@ -1,6 +1,6 @@
 import 'package:crypto_tracker/pages/browse_page.dart';
-import 'package:crypto_tracker/porviders/providers.dart';
-import 'package:crypto_tracker/porviders/search_notifier.dart';
+import 'package:crypto_tracker/providers/providers.dart';
+import 'package:crypto_tracker/providers/search_notifier.dart';
 import 'package:crypto_tracker/resources/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

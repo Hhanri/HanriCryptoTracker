@@ -3,7 +3,6 @@ import 'package:equatable/equatable.dart';
 class PriceModel extends Equatable{
   final double price;
   final double priceChange;
-
   const PriceModel({
     required this.price,
     required this.priceChange

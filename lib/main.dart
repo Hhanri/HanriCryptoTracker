@@ -1,5 +1,5 @@
 import 'package:crypto_tracker/pages/home_page.dart';
-import 'package:crypto_tracker/porviders/providers.dart';
+import 'package:crypto_tracker/providers/providers.dart';
 import 'package:crypto_tracker/resources/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,6 +26,7 @@ class _MyAppState extends ConsumerState<MyApp> {
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       ref.watch(cryptoIdsProvider.notifier).loadInitialState();
       ref.watch(timerProvider.notifier).start();
+      ref.watch(connectivityProvider.notifier).startListeningConnectivityState();
     });
   }
 
