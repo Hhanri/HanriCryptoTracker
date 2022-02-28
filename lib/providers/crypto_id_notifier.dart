@@ -47,4 +47,9 @@ class CryptoIdNotifier extends StateNotifier<List<CryptoIdModel>> {
     state = temporaryState;
     save();
   }
+
+  void removeId(CryptoIdModel id) {
+    state = state.where((element) => element != id).toList();
+    save();
+  }
 }

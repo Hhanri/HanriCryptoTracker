@@ -28,7 +28,8 @@ class BrowseScreen extends StatelessWidget {
                 final bool isConnectedToInternet = ref.watch(connectivityProvider);
                 if (isConnectedToInternet) {
                   if (snapshot.hasData) {
-                    return BrowseListViewWidget(cryptos: snapshot.data!);
+                    final List<CryptoIdModel> cryptos = snapshot.data!;
+                    return BrowseListViewWidget(cryptos: cryptos);
                   } else {
                     return const LoadingWidget();
                   }

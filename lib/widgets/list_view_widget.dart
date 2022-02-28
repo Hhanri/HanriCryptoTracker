@@ -4,6 +4,7 @@ import 'package:crypto_tracker/providers/providers.dart';
 import 'package:crypto_tracker/providers/search_notifier.dart';
 import 'package:crypto_tracker/resources/strings.dart';
 import 'package:crypto_tracker/services/api_service.dart';
+import 'package:crypto_tracker/widgets/dismissible_background_container_widget.dart';
 import 'package:crypto_tracker/widgets/list_tile_widget.dart';
 import 'package:crypto_tracker/widgets/loading_widget.dart';
 import 'package:crypto_tracker/widgets/no_internet_widget.dart';
@@ -25,20 +26,25 @@ class HomeListViewWidget extends StatelessWidget {
         if (isConnectedToInternet) {
           if (searching.isSearching == true && searching.searchedId.isNotEmpty) {
             final List<CryptoIdModel> searchedIds = cryptos.where(
-                    (element) => element.id.toLowerCase().startsWith(searching.searchedId.toLowerCase()) || element.name.startsWith(searching.searchedId.toLowerCase())
+              (element) => element.id.toLowerCase().startsWith(searching.searchedId.toLowerCase()) || element.name.startsWith(searching.searchedId.toLowerCase())
             ).toList();
             if (searchedIds.isNotEmpty) {
-              return SimpleListViewWidget(cryptos: searchedIds, isNewId: false);
+              return SimpleListViewWidget(
+                cryptos: searchedIds,
+                isNewId: false,
+                ref: ref,
+              );
             } else {
               return const Center(child: Text("no result found"));
             }
           } else {
             if (cryptos.isNotEmpty){
               return ReorderableListViewWidget(
-                  cryptos: cryptos,
-                  onReorder: (oldIndex, newIndex) {
-                    ref.watch(cryptoIdsProvider.notifier).swapIds(oldIndex, newIndex, cryptos[oldIndex]);
-                  }
+                ref: ref,
+                cryptos: cryptos,
+                onReorder: (oldIndex, newIndex) {
+                  ref.watch(cryptoIdsProvider.notifier).swapIds(oldIndex, newIndex, cryptos[oldIndex]);
+                }
               );
             } else {
               return const Center(
@@ -74,12 +80,20 @@ class BrowseListViewWidget extends StatelessWidget {
             (element) => element.id.toLowerCase().startsWith(searching.searchedId.toLowerCase()) || element.name.toLowerCase().toLowerCase().startsWith(searching.searchedId.toLowerCase())
           ).toList();
           if (searchedIds.isNotEmpty) {
-            return SimpleListViewWidget(cryptos: searchedIds, isNewId: true);
+            return SimpleListViewWidget(
+              cryptos: searchedIds,
+              isNewId: true,
+              ref: ref,
+            );
           } else {
             return const Center(child: Text("no result found"));
           }
         } else {
-          return SimpleListViewWidget(cryptos: cryptos, isNewId: true);
+          return SimpleListViewWidget(
+            cryptos: cryptos,
+            isNewId: true,
+            ref: ref,
+          );
         }
       },
     );
@@ -87,12 +101,14 @@ class BrowseListViewWidget extends StatelessWidget {
 }
 
 class SimpleListViewWidget extends StatelessWidget {
+  final WidgetRef ref;
   final List<CryptoIdModel> cryptos;
   final bool isNewId;
   const SimpleListViewWidget({
     Key? key,
     required this.cryptos,
-    required this.isNewId
+    required this.isNewId,
+    required this.ref
   }) : super(key: key);
 
   @override
@@ -103,7 +119,11 @@ class SimpleListViewWidget extends StatelessWidget {
         itemCount: cryptos.length,
         physics: const ClampingScrollPhysics(),
         itemBuilder: (BuildContext context, int index) {
-          return ListTileWidget(crypto: cryptos[index], isNewId: isNewId, price: PriceModel.blankModel);
+          return ListTileWidget(
+            crypto: cryptos[index],
+            isNewId: isNewId,
+            price: PriceModel.blankModel,
+          );
         },
       );
     } else {
@@ -111,11 +131,27 @@ class SimpleListViewWidget extends StatelessWidget {
         future: APIService.getPrices(cryptos),
         builder: (BuildContext context, AsyncSnapshot<List<PriceModel>> snapshot) {
           if (snapshot.hasData) {
+            final List<PriceModel> prices = snapshot.data!;
             return ListView.builder(
               itemCount: cryptos.length,
               physics: const ClampingScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
-                return ListTileWidget(crypto: cryptos[index], isNewId: isNewId, price: snapshot.data![index],);
+                final CryptoIdModel currentCrypto = cryptos[index];
+                final PriceModel currentPrice = prices[index];
+                return Dismissible(
+                  background: const DissmissibleBackgroundContainerWidget(),
+                  key: ValueKey(currentCrypto),
+                  direction: DismissDirection.endToStart,
+                  onDismissed: (direction) {
+                    prices.removeAt(index);
+                    ref.watch(cryptoIdsProvider.notifier).removeId(currentCrypto);
+                  },
+                  child: ListTileWidget(
+                    crypto: currentCrypto,
+                    isNewId: isNewId,
+                    price: currentPrice
+                  ),
+                );
               },
             );
           } else {
@@ -130,10 +166,12 @@ class SimpleListViewWidget extends StatelessWidget {
 class ReorderableListViewWidget extends StatelessWidget {
   final List<CryptoIdModel> cryptos;
   final Function(int,int) onReorder;
+  final WidgetRef ref;
   const ReorderableListViewWidget({
     Key? key,
     required this.cryptos,
     required this.onReorder,
+    required this.ref,
   }) : super(key: key);
 
   @override
@@ -146,11 +184,21 @@ class ReorderableListViewWidget extends StatelessWidget {
           return ReorderableListView.builder(
               physics: const ClampingScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
-                return ListTileWidget(
-                  isNewId: false,
-                  crypto: cryptos[index],
-                  key: ValueKey(cryptos[index].id + cryptos[index].name),
-                  price: prices[index]
+                final CryptoIdModel currentCrypto = cryptos[index];
+                final PriceModel currentPrice = prices[index];
+                return Dismissible(
+                  background: const DissmissibleBackgroundContainerWidget(),
+                  key: ValueKey(currentCrypto),
+                  direction: DismissDirection.endToStart,
+                  onDismissed: (direction) {
+                    prices.removeAt(index);
+                    ref.watch(cryptoIdsProvider.notifier).removeId(currentCrypto);
+                  },
+                  child: ListTileWidget(
+                    crypto: currentCrypto,
+                    isNewId: false,
+                    price: currentPrice
+                  ),
                 );
               },
               itemCount: cryptos.length,
